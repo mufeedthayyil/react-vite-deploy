@@ -1,0 +1,132 @@
+import { Camera, Accessory } from '../types';
+
+export const cameras: Camera[] = [
+  {
+    id: '1',
+    name: 'Canon EOS R5',
+    category: 'DSLR',
+    imageUrl: 'https://images.pexels.com/photos/51383/photo-camera-subject-photographer-51383.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Professional full-frame mirrorless camera with 8K video capabilities',
+    price12h: 120,
+    price24h: 200,
+    available: true,
+  },
+  {
+    id: '2',
+    name: 'Sony A7S III',
+    category: 'Mirrorless',
+    imageUrl: 'https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Exceptional low-light performance with 4K 120p video recording',
+    price12h: 110,
+    price24h: 180,
+    available: true,
+  },
+  {
+    id: '3',
+    name: 'Blackmagic Pocket 6K',
+    category: 'Cinema Camera',
+    imageUrl: 'https://images.pexels.com/photos/274973/pexels-photo-274973.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Super 35 cinema camera with 6K resolution and 13 stops of dynamic range',
+    price12h: 150,
+    price24h: 250,
+    available: true,
+  },
+  {
+    id: '4',
+    name: 'Nikon Z7 II',
+    category: 'Mirrorless',
+    imageUrl: 'https://images.pexels.com/photos/243757/pexels-photo-243757.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: '45.7MP full-frame mirrorless camera with excellent dynamic range',
+    price12h: 100,
+    price24h: 160,
+    available: true,
+  },
+  {
+    id: '5',
+    name: 'RED Komodo 6K',
+    category: 'Cinema Camera',
+    imageUrl: 'https://images.pexels.com/photos/1787235/pexels-photo-1787235.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Compact cinema camera with global shutter and 6K recording',
+    price12h: 300,
+    price24h: 500,
+    available: true,
+  },
+  {
+    id: '6',
+    name: 'Fujifilm GFX 100S',
+    category: 'Medium Format',
+    imageUrl: 'https://images.pexels.com/photos/3497065/pexels-photo-3497065.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: '102MP medium format sensor in a relatively compact body',
+    price12h: 250,
+    price24h: 400,
+    available: true,
+  }
+];
+
+export const accessories: Accessory[] = [
+  {
+    id: '101',
+    name: 'DJI Ronin-S2',
+    category: 'Stabilizer',
+    imageUrl: 'https://images.pexels.com/photos/3602258/pexels-photo-3602258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Professional 3-axis gimbal stabilizer for DSLRs and mirrorless cameras',
+    price12h: 45,
+    price24h: 75,
+    available: true,
+  },
+  {
+    id: '102',
+    name: 'Canon RF 24-70mm f/2.8',
+    category: 'Lens',
+    imageUrl: 'https://images.pexels.com/photos/16775856/pexels-photo-16775856/free-photo-of-close-up-of-a-camera-lens.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Versatile standard zoom lens with constant f/2.8 aperture',
+    price12h: 35,
+    price24h: 60,
+    available: true,
+  },
+  {
+    id: '103',
+    name: 'Sachtler Flowtech 75 Tripod',
+    category: 'Support',
+    imageUrl: 'https://images.pexels.com/photos/66134/pexels-photo-66134.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Professional carbon fiber tripod with innovative leg mechanism',
+    price12h: 40,
+    price24h: 65,
+    available: true,
+  },
+  {
+    id: '104',
+    name: 'RODE NTG5 Shotgun Microphone',
+    category: 'Audio',
+    imageUrl: 'https://images.pexels.com/photos/164755/pexels-photo-164755.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Broadcast-grade shotgun microphone for professional sound recording',
+    price12h: 30,
+    price24h: 50,
+    available: true,
+  },
+  {
+    id: '105',
+    name: 'Aputure 600D Pro Light',
+    category: 'Lighting',
+    imageUrl: 'https://images.pexels.com/photos/2752899/pexels-photo-2752899.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Powerful 600W daylight-balanced LED light with Bowens mount',
+    price12h: 55,
+    price24h: 90,
+    available: true,
+  },
+  {
+    id: '106',
+    name: 'SmallHD 5" FOCUS Monitor',
+    category: 'Monitoring',
+    imageUrl: 'https://images.pexels.com/photos/12550657/pexels-photo-12550657.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    description: 'Compact 5" on-camera monitor with 800 nits brightness',
+    price12h: 25,
+    price24h: 40,
+    available: true,
+  }
+];
+
+export const adminUser = {
+  username: 'admin',
+  password: 'admin123' // In a real app, never store plain text passwords
+};
