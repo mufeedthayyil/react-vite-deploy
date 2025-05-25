@@ -215,10 +215,10 @@ const Admin: React.FC = () => {
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ${camera.price12h}
+                              ₹{camera.price12h}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ${camera.price24h}
+                              ₹{camera.price24h}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span 
@@ -326,10 +326,10 @@ const Admin: React.FC = () => {
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ${accessory.price12h}
+                              ₹{accessory.price12h}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ${accessory.price24h}
+                              ₹{accessory.price24h}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span 
