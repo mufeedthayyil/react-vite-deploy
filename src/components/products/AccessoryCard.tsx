@@ -50,7 +50,7 @@ const AccessoryCard: React.FC<AccessoryCardProps> = ({ accessory }) => {
             <div className="flex space-x-2">
               <button
                 onClick={() => setDuration('12h')}
-                className={`px-2 py-1 text-xs rounded ${
+                className={`px-2 py-1 text-xs rounded ₹{
                   duration === '12h' 
                     ? 'bg-purple-600 text-white' 
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
@@ -60,7 +60,7 @@ const AccessoryCard: React.FC<AccessoryCardProps> = ({ accessory }) => {
               </button>
               <button
                 onClick={() => setDuration('24h')}
-                className={`px-2 py-1 text-xs rounded ${
+                className={`px-2 py-1 text-xs rounded ₹{
                   duration === '24h' 
                     ? 'bg-purple-600 text-white' 
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
@@ -70,14 +70,14 @@ const AccessoryCard: React.FC<AccessoryCardProps> = ({ accessory }) => {
               </button>
             </div>
             <span className="text-lg font-bold text-white">
-              ${duration === '12h' ? accessory.price12h : accessory.price24h}
+              ₹{duration === '12h' ? accessory.price12h : accessory.price24h}
             </span>
           </div>
           
           <button
             onClick={handleAddToCart}
             disabled={!accessory.available}
-            className={`w-full py-2 px-4 rounded-md flex items-center justify-center space-x-2 transition-colors ${
+            className={`w-full py-2 px-4 rounded-md flex items-center justify-center space-x-2 transition-colors ₹{
               accessory.available 
                 ? 'bg-purple-600 hover:bg-purple-700 text-white' 
                 : 'bg-gray-700 text-gray-400 cursor-not-allowed'
@@ -122,11 +122,11 @@ const AccessoryCard: React.FC<AccessoryCardProps> = ({ accessory }) => {
               <div className="space-y-4">
                 <div className="flex justify-between border-b border-gray-700 pb-2">
                   <span className="text-gray-400">12 Hour Rental</span>
-                  <span className="text-white font-semibold">${accessory.price12h}</span>
+                  <span className="text-white font-semibold">₹{accessory.price12h}</span>
                 </div>
                 <div className="flex justify-between border-b border-gray-700 pb-2">
                   <span className="text-gray-400">24 Hour Rental</span>
-                  <span className="text-white font-semibold">${accessory.price24h}</span>
+                  <span className="text-white font-semibold">₹{accessory.price24h}</span>
                 </div>
                 <div className="flex justify-between border-b border-gray-700 pb-2">
                   <span className="text-gray-400">Availability</span>
@@ -144,7 +144,7 @@ const AccessoryCard: React.FC<AccessoryCardProps> = ({ accessory }) => {
                     setShowDetails(false);
                   }}
                   disabled={!accessory.available}
-                  className={`flex-1 py-2 rounded-md transition-colors ${
+                  className={`flex-1 py-2 rounded-md transition-colors ₹{
                     accessory.available 
                       ? 'bg-purple-600 hover:bg-purple-700 text-white' 
                       : 'bg-gray-700 text-gray-400 cursor-not-allowed'
