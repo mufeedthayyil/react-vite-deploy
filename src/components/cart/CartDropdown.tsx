@@ -47,11 +47,11 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ onClose }) => {
                     <div className="flex justify-between">
                       <h4 className="text-white font-medium">{item.name}</h4>
                       <span className="text-white font-semibold">
-                        ${item.price * item.quantity}
+                        ₹{item.price * item.quantity}
                       </span>
                     </div>
                     <p className="text-gray-400 text-sm">
-                      ${item.price} × {item.duration}
+                      ₹{item.price} × {item.duration}
                     </p>
                     <div className="flex items-center mt-2">
                       <div className="flex items-center bg-gray-700 rounded-md">
@@ -88,7 +88,7 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ onClose }) => {
         <div className="p-4 border-t border-gray-700 bg-gray-850">
           <div className="flex justify-between items-center mb-4">
             <span className="text-gray-300">Total</span>
-            <span className="text-white font-bold text-xl">${totalPrice.toFixed(2)}</span>
+            <span className="text-white font-bold text-xl">₹{totalPrice.toFixed(2)}</span>
           </div>
           <div className="flex space-x-3">
             <button 
