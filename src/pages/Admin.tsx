@@ -118,7 +118,7 @@ const Admin: React.FC = () => {
           <div className="flex border-b border-gray-700">
             <button
               onClick={() => setActiveTab('cameras')}
-              className={`px-6 py-3 font-medium flex items-center ₹{
+              className={`px-6 py-3 font-medium flex items-center ${
                 activeTab === 'cameras'
                   ? 'text-indigo-400 border-b-2 border-indigo-400'
                   : 'text-gray-400 hover:text-white'
@@ -129,7 +129,7 @@ const Admin: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('accessories')}
-              className={`px-6 py-3 font-medium flex items-center ₹{
+              className={`px-6 py-3 font-medium flex items-center ${
                 activeTab === 'accessories'
                   ? 'text-purple-400 border-b-2 border-purple-400'
                   : 'text-gray-400 hover:text-white'
@@ -215,14 +215,14 @@ const Admin: React.FC = () => {
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ₹{camera.price12h}
+                              ${camera.price12h}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ₹{camera.price24h}
+                              ${camera.price24h}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span 
-                                className={`px-2 py-1 text-xs rounded-full ₹{
+                                className={`px-2 py-1 text-xs rounded-full ${
                                   camera.available 
                                     ? 'bg-green-900 text-green-300' 
                                     : 'bg-red-900 text-red-300'
@@ -326,14 +326,14 @@ const Admin: React.FC = () => {
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ₹{accessory.price12h}
+                              ${accessory.price12h}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ₹{accessory.price24h}
+                              ${accessory.price24h}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span 
-                                className={`px-2 py-1 text-xs rounded-full ₹{
+                                className={`px-2 py-1 text-xs rounded-full ${
                                   accessory.available 
                                     ? 'bg-green-900 text-green-300' 
                                     : 'bg-red-900 text-red-300'
