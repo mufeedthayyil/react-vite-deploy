@@ -1,17 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
-import { initializeLocalStorage } from './utils/localStorage';
 
 function App() {
-  useEffect(() => {
-    // Initialize local storage with data when the app loads
-    initializeLocalStorage();
-  }, []);
-
   return (
     <AuthProvider>
       <CartProvider>

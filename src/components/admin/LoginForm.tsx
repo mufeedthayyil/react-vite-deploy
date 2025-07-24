@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Camera, Lock, User } from 'lucide-react';
+import { Camera, Lock, User, AlertCircle } from 'lucide-react';
 
 const LoginForm: React.FC = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { signIn } = useAuth();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,9 +15,9 @@ const LoginForm: React.FC = () => {
     setIsLoading(true);
     
     try {
-      const success = await login(username, password);
-      if (!success) {
-        setError('Invalid username or password');
+      const { error } = await signIn(email, password);
+      if (error) {
+        setError(error.message || 'Invalid email or password');
       }
     } catch (err) {
       setError('An error occurred during login');
@@ -39,26 +39,27 @@ const LoginForm: React.FC = () => {
         
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {error && (
-            <div className="bg-red-500/10 border border-red-500 text-red-500 rounded-md p-3 text-sm">
+            <div className="bg-red-500/10 border border-red-500 text-red-500 rounded-md p-3 text-sm flex items-center">
+              <AlertCircle className="h-4 w-4 mr-2" />
               {error}
             </div>
           )}
           
           <div className="space-y-2">
-            <label htmlFor="username" className="text-sm font-medium text-gray-300 block">
-              Username
+            <label htmlFor="email" className="text-sm font-medium text-gray-300 block">
+              Email
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <User className="h-5 w-5 text-gray-500" />
               </div>
               <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="block w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Enter your username"
+                placeholder="Enter your email"
                 required
               />
             </div>
@@ -95,10 +96,10 @@ const LoginForm: React.FC = () => {
           </div>
           
           <div className="text-sm text-center text-gray-400">
-            <span>Demo credentials: </span>
-            <span className="font-mono bg-gray-700 px-1 py-0.5 rounded text-xs">admin</span>
-            <span> / </span>
-            <span className="font-mono bg-gray-700 px-1 py-0.5 rounded text-xs">admin123</span>
+            <p className="mb-2">Need an admin account?</p>
+            <p className="text-xs text-gray-500">
+              Contact your system administrator to get admin access.
+            </p>
           </div>
         </form>
       </div>

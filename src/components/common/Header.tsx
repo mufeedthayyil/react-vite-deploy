@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { Camera, ShoppingCart, Menu, X } from 'lucide-react';
+import { Camera, ShoppingCart, Menu, X, LogOut } from 'lucide-react';
 import CartDropdown from '../cart/CartDropdown';
 
 const Header: React.FC = () => {
   const { itemCount } = useCart();
-  const { isAuthenticated, logout, isAdmin } = useAuth();
+  const { isAuthenticated, signOut, isAdmin, user } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,6 +30,10 @@ const Header: React.FC = () => {
   
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
   };
   
   return (
@@ -61,12 +65,18 @@ const Header: React.FC = () => {
               </a>
             )}
             {isAuthenticated ? (
-              <button 
-                onClick={logout}
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Logout
-              </button>
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-400 text-sm">
+                  {user?.profile?.name || user?.email}
+                </span>
+                <button 
+                  onClick={handleSignOut}
+                  className="text-gray-300 hover:text-white transition-colors flex items-center space-x-1"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
             ) : (
               <a href="/admin" className="text-gray-300 hover:text-white transition-colors">
                 Admin Login
@@ -140,13 +150,14 @@ const Header: React.FC = () => {
               )}
               {isAuthenticated ? (
                 <button 
-                  onClick={() => {
-                    logout();
+                  onClick={async () => {
+                    await handleSignOut();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="text-gray-300 hover:text-white transition-colors text-left"
+                  className="text-gray-300 hover:text-white transition-colors text-left flex items-center space-x-2"
                 >
-                  Logout
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
                 </button>
               ) : (
                 <a 

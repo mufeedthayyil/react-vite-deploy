@@ -4,22 +4,56 @@ import Hero from '../components/home/Hero';
 import Footer from '../components/common/Footer';
 import CameraCard from '../components/products/CameraCard';
 import AccessoryCard from '../components/products/AccessoryCard';
-import { Camera, Accessory } from '../types';
-import { getCameras, getAccessories, initializeLocalStorage } from '../utils/localStorage';
+import { equipmentService } from '../services/equipmentService';
+import { Database } from '../types/database';
+
+type Equipment = Database['public']['Tables']['equipments']['Row'];
 
 const Home: React.FC = () => {
-  const [cameras, setCameras] = useState<Camera[]>([]);
-  const [accessories, setAccessories] = useState<Accessory[]>([]);
+  const [cameras, setCameras] = useState<Equipment[]>([]);
+  const [accessories, setAccessories] = useState<Equipment[]>([]);
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    // Initialize local storage with data if needed
-    initializeLocalStorage();
-    
-    // Load data
-    setCameras(getCameras());
-    setAccessories(getAccessories());
+    const loadEquipment = async () => {
+      try {
+        const allEquipment = await equipmentService.getAll();
+        
+        // Separate cameras and accessories based on category
+        const cameraCategories = ['DSLR', 'Mirrorless', 'Cinema Camera', 'Medium Format', 'Compact'];
+        const accessoryCategories = ['Lens', 'Stabilizer', 'Lighting', 'Audio', 'Support', 'Monitoring', 'Storage', 'Power'];
+        
+        const cameraItems = allEquipment.filter(item => 
+          cameraCategories.includes(item.category)
+        );
+        
+        const accessoryItems = allEquipment.filter(item => 
+          accessoryCategories.includes(item.category)
+        );
+        
+        setCameras(cameraItems);
+        setAccessories(accessoryItems);
+      } catch (error) {
+        console.error('Error loading equipment:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEquipment();
   }, []);
   
+  if (loading) {
+    return (
+      <div className="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading equipment...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-900 text-white min-h-screen">
       <Header />
@@ -88,7 +122,19 @@ const Home: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {cameras.map(camera => (
-              <CameraCard key={camera.id} camera={camera} />
+              <CameraCard 
+                key={camera.id} 
+                camera={{
+                  id: camera.id,
+                  name: camera.name,
+                  category: camera.category,
+                  imageUrl: camera.image_url,
+                  description: camera.description,
+                  price12h: camera.rate_12hr,
+                  price24h: camera.rate_24hr,
+                  available: camera.available || false
+                }} 
+              />
             ))}
           </div>
         </div>
@@ -113,7 +159,19 @@ const Home: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {accessories.map(accessory => (
-              <AccessoryCard key={accessory.id} accessory={accessory} />
+              <AccessoryCard 
+                key={accessory.id} 
+                accessory={{
+                  id: accessory.id,
+                  name: accessory.name,
+                  category: accessory.category,
+                  imageUrl: accessory.image_url,
+                  description: accessory.description,
+                  price12h: accessory.rate_12hr,
+                  price24h: accessory.rate_24hr,
+                  available: accessory.available || false
+                }} 
+              />
             ))}
           </div>
         </div>

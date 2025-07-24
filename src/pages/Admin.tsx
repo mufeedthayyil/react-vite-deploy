@@ -3,83 +3,72 @@ import { useAuth } from '../context/AuthContext';
 import LoginForm from '../components/admin/LoginForm';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
-import CameraForm from '../components/admin/CameraForm';
-import AccessoryForm from '../components/admin/AccessoryForm';
-import { Camera, Accessory } from '../types';
-import { 
-  getCameras, 
-  getAccessories, 
-  addCamera, 
-  updateCamera, 
-  deleteCamera,
-  addAccessory,
-  updateAccessory,
-  deleteAccessory
-} from '../utils/localStorage';
+import { equipmentService } from '../services/equipmentService';
+import { Database } from '../types/database';
 import { Edit, Trash2, Plus, Camera as CameraIcon, Package } from 'lucide-react';
 
+type Equipment = Database['public']['Tables']['equipments']['Row'];
+
 const Admin: React.FC = () => {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAuthenticated, isAdmin, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<'cameras' | 'accessories'>('cameras');
-  const [cameras, setCameras] = useState<Camera[]>([]);
-  const [accessories, setAccessories] = useState<Accessory[]>([]);
-  const [showCameraForm, setShowCameraForm] = useState(false);
-  const [showAccessoryForm, setShowAccessoryForm] = useState(false);
-  const [editingCamera, setEditingCamera] = useState<Camera | null>(null);
-  const [editingAccessory, setEditingAccessory] = useState<Accessory | null>(null);
+  const [equipment, setEquipment] = useState<Equipment[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
   
   useEffect(() => {
-    if (isAuthenticated) {
-      setCameras(getCameras());
-      setAccessories(getAccessories());
+    if (isAuthenticated && isAdmin) {
+      loadEquipment();
     }
-  }, [isAuthenticated]);
-  
-  const handleCameraSubmit = (camera: Camera) => {
-    if (editingCamera) {
-      updateCamera(camera);
-      setEditingCamera(null);
-    } else {
-      addCamera(camera);
-    }
-    setShowCameraForm(false);
-    setCameras(getCameras());
-  };
-  
-  const handleAccessorySubmit = (accessory: Accessory) => {
-    if (editingAccessory) {
-      updateAccessory(accessory);
-      setEditingAccessory(null);
-    } else {
-      addAccessory(accessory);
-    }
-    setShowAccessoryForm(false);
-    setAccessories(getAccessories());
-  };
-  
-  const handleDeleteCamera = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this camera?')) {
-      deleteCamera(id);
-      setCameras(getCameras());
+  }, [isAuthenticated, isAdmin]);
+
+  const loadEquipment = async () => {
+    try {
+      const data = await equipmentService.getAll();
+      setEquipment(data);
+    } catch (error) {
+      console.error('Error loading equipment:', error);
+    } finally {
+      setLoadingData(false);
     }
   };
-  
-  const handleDeleteAccessory = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this accessory?')) {
-      deleteAccessory(id);
-      setAccessories(getAccessories());
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      try {
+        await equipmentService.delete(id);
+        await loadEquipment();
+      } catch (error) {
+        console.error('Error deleting equipment:', error);
+      }
     }
   };
-  
-  const handleEditCamera = (camera: Camera) => {
-    setEditingCamera(camera);
-    setShowCameraForm(true);
+
+  const toggleAvailability = async (id: string, currentAvailability: boolean) => {
+    try {
+      await equipmentService.update(id, { available: !currentAvailability });
+      await loadEquipment();
+    } catch (error) {
+      console.error('Error updating availability:', error);
+    }
   };
+
+  // Filter equipment by type
+  const cameraCategories = ['DSLR', 'Mirrorless', 'Cinema Camera', 'Medium Format', 'Compact'];
+  const accessoryCategories = ['Lens', 'Stabilizer', 'Lighting', 'Audio', 'Support', 'Monitoring', 'Storage', 'Power'];
   
-  const handleEditAccessory = (accessory: Accessory) => {
-    setEditingAccessory(accessory);
-    setShowAccessoryForm(true);
-  };
+  const cameras = equipment.filter(item => cameraCategories.includes(item.category));
+  const accessories = equipment.filter(item => accessoryCategories.includes(item.category));
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
   
   if (!isAuthenticated) {
     return <LoginForm />;
@@ -145,27 +134,13 @@ const Admin: React.FC = () => {
               <>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold">Camera Inventory</h2>
-                  <button
-                    onClick={() => {
-                      setEditingCamera(null);
-                      setShowCameraForm(true);
-                    }}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md flex items-center transition-colors"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Camera
-                  </button>
                 </div>
                 
-                {showCameraForm ? (
-                  <CameraForm
-                    camera={editingCamera || undefined}
-                    onSubmit={handleCameraSubmit}
-                    onCancel={() => {
-                      setShowCameraForm(false);
-                      setEditingCamera(null);
-                    }}
-                  />
+                {loadingData ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+                    <p className="text-gray-400">Loading cameras...</p>
+                  </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-700">
@@ -197,7 +172,7 @@ const Admin: React.FC = () => {
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
                                 <img
-                                  src={camera.imageUrl}
+                                  src={camera.image_url}
                                   alt={camera.name}
                                   className="h-10 w-10 rounded-md object-cover mr-3"
                                 />
@@ -215,31 +190,26 @@ const Admin: React.FC = () => {
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ₹{camera.price12h}
+                              ₹{camera.rate_12hr}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ₹{camera.price24h}
+                              ₹{camera.rate_24hr}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <span 
-                                className={`px-2 py-1 text-xs rounded-full ${
+                              <button
+                                onClick={() => toggleAvailability(camera.id, camera.available || false)}
+                                className={`px-2 py-1 text-xs rounded-full transition-colors ${
                                   camera.available 
-                                    ? 'bg-green-900 text-green-300' 
-                                    : 'bg-red-900 text-red-300'
+                                    ? 'bg-green-900 text-green-300 hover:bg-green-800' 
+                                    : 'bg-red-900 text-red-300 hover:bg-red-800'
                                 }`}
                               >
                                 {camera.available ? 'Available' : 'Unavailable'}
-                              </span>
+                              </button>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                               <button
-                                onClick={() => handleEditCamera(camera)}
-                                className="text-indigo-400 hover:text-indigo-300 mr-3"
-                              >
-                                <Edit className="h-5 w-5" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteCamera(camera.id)}
+                                onClick={() => handleDelete(camera.id)}
                                 className="text-red-400 hover:text-red-300"
                               >
                                 <Trash2 className="h-5 w-5" />
@@ -256,27 +226,13 @@ const Admin: React.FC = () => {
               <>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold">Accessory Inventory</h2>
-                  <button
-                    onClick={() => {
-                      setEditingAccessory(null);
-                      setShowAccessoryForm(true);
-                    }}
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md flex items-center transition-colors"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Accessory
-                  </button>
                 </div>
                 
-                {showAccessoryForm ? (
-                  <AccessoryForm
-                    accessory={editingAccessory || undefined}
-                    onSubmit={handleAccessorySubmit}
-                    onCancel={() => {
-                      setShowAccessoryForm(false);
-                      setEditingAccessory(null);
-                    }}
-                  />
+                {loadingData ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mx-auto mb-4"></div>
+                    <p className="text-gray-400">Loading accessories...</p>
+                  </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-700">
@@ -308,7 +264,7 @@ const Admin: React.FC = () => {
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
                                 <img
-                                  src={accessory.imageUrl}
+                                  src={accessory.image_url}
                                   alt={accessory.name}
                                   className="h-10 w-10 rounded-md object-cover mr-3"
                                 />
@@ -326,31 +282,26 @@ const Admin: React.FC = () => {
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ₹{accessory.price12h}
+                              ₹{accessory.rate_12hr}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              ₹{accessory.price24h}
+                              ₹{accessory.rate_24hr}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <span 
-                                className={`px-2 py-1 text-xs rounded-full ${
+                              <button
+                                onClick={() => toggleAvailability(accessory.id, accessory.available || false)}
+                                className={`px-2 py-1 text-xs rounded-full transition-colors ${
                                   accessory.available 
-                                    ? 'bg-green-900 text-green-300' 
-                                    : 'bg-red-900 text-red-300'
+                                    ? 'bg-green-900 text-green-300 hover:bg-green-800' 
+                                    : 'bg-red-900 text-red-300 hover:bg-red-800'
                                 }`}
                               >
                                 {accessory.available ? 'Available' : 'Unavailable'}
-                              </span>
+                              </button>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                               <button
-                                onClick={() => handleEditAccessory(accessory)}
-                                className="text-purple-400 hover:text-purple-300 mr-3"
-                              >
-                                <Edit className="h-5 w-5" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteAccessory(accessory.id)}
+                                onClick={() => handleDelete(accessory.id)}
                                 className="text-red-400 hover:text-red-300"
                               >
                                 <Trash2 className="h-5 w-5" />
