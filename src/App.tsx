@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
-import Admin from './pages/Admin';
+import Home from './pages/Admin';
+import Admin from './pages/Home';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 
