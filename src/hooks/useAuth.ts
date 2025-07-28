@@ -52,9 +52,8 @@ export function useAuth() {
 
       setUser({ ...authUser, profile: profile || undefined })
     } catch (error) {
-      console.error('Error fetching user profile:', error)
       // If no profile exists, create one
-      if (error.code === 'PGRST116') {
+      if (error?.code === 'PGRST116' || !error) {
         try {
           const { data: newProfile } = await supabase
             .from('user_profiles')
@@ -73,6 +72,7 @@ export function useAuth() {
           setUser(authUser)
         }
       } else {
+        console.error('Error fetching user profile:', error)
         setUser(authUser)
       }
     } finally {

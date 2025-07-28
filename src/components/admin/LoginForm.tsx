@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { Camera, Lock, User, AlertCircle } from 'lucide-react';
 
 const LoginForm: React.FC = () => {
@@ -9,7 +8,6 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
-  const navigate = useNavigate();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,10 +18,8 @@ const LoginForm: React.FC = () => {
       const { error } = await signIn(email, password);
       if (error) {
         setError(error.message || 'Invalid email or password');
-      } else {
-        // Successful login - navigate to admin panel
-        navigate('/admin');
       }
+      // No need to manually navigate - the auth state change will handle the UI update
     } catch (err) {
       setError('An error occurred during login');
     } finally {
@@ -101,6 +97,11 @@ const LoginForm: React.FC = () => {
           </div>
           
           <div className="text-sm text-center text-gray-400">
+            <div className="mb-4 p-3 bg-gray-700 rounded-md">
+              <p className="text-xs text-gray-300 mb-2">Demo Admin Credentials:</p>
+              <p className="text-xs text-gray-400">Email: admin@lensprorentals.com</p>
+              <p className="text-xs text-gray-400">Password: admin123</p>
+            </div>
             <p className="mb-2">Need an admin account?</p>
             <p className="text-xs text-gray-500">
               Contact your system administrator to get admin access.

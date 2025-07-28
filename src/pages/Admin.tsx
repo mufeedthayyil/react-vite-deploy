@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import LoginForm from '../components/admin/LoginForm';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
@@ -16,7 +15,6 @@ type Suggestion = Database['public']['Tables']['suggestions']['Row'];
 
 const Admin: React.FC = () => {
   const { isAuthenticated, isAdmin, loading } = useAuth();
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'cameras' | 'accessories' | 'orders' | 'notifications'>('cameras');
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -30,13 +28,6 @@ const Admin: React.FC = () => {
       loadNotifications();
     }
   }, [isAuthenticated, isAdmin]);
-
-  useEffect(() => {
-    // Redirect to home if not authenticated after loading
-    if (!loading && !isAuthenticated) {
-      navigate('/');
-    }
-  }, [loading, isAuthenticated, navigate]);
 
   const loadEquipment = async () => {
     try {
@@ -145,12 +136,12 @@ const Admin: React.FC = () => {
           <p className="text-gray-400 mb-6">
             You don't have permission to access the admin panel.
           </p>
-          <button
-            onClick={() => navigate('/')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-md transition-colors"
+          <a
+            href="/"
+            className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-md transition-colors"
           >
             Back to Home
-          </button>
+          </a>
         </div>
       </div>
     );
