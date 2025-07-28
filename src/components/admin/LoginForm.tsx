@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Camera, Lock, User, AlertCircle } from 'lucide-react';
 
 const LoginForm: React.FC = () => {
@@ -8,6 +9,7 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
+  const navigate = useNavigate();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,6 +20,9 @@ const LoginForm: React.FC = () => {
       const { error } = await signIn(email, password);
       if (error) {
         setError(error.message || 'Invalid email or password');
+      } else {
+        // Successful login - navigate to admin panel
+        navigate('/admin');
       }
     } catch (err) {
       setError('An error occurred during login');

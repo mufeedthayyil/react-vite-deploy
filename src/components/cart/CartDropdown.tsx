@@ -1,5 +1,7 @@
 import React from 'react';
+import { useState } from 'react';
 import { useCart } from '../../context/CartContext';
+import CheckoutForm from '../checkout/CheckoutForm';
 import { X, ShoppingBag, Trash2 } from 'lucide-react';
 
 interface CartDropdownProps {
@@ -8,7 +10,12 @@ interface CartDropdownProps {
 
 const CartDropdown: React.FC<CartDropdownProps> = ({ onClose }) => {
   const { items, removeItem, updateItem, totalPrice, clearItems } = useCart();
+  const [showCheckout, setShowCheckout] = useState(false);
   
+  if (showCheckout) {
+    return <CheckoutForm onClose={() => setShowCheckout(false)} />;
+  }
+
   return (
     <div className="absolute top-full right-0 mt-2 w-96 bg-gray-800 rounded-lg shadow-xl z-50 max-h-[80vh] overflow-hidden flex flex-col mr-4">
       <div className="p-4 flex justify-between items-center border-b border-gray-700">
@@ -98,6 +105,7 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ onClose }) => {
               Clear Cart
             </button>
             <button 
+              onClick={() => setShowCheckout(true)}
               className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition-colors text-sm"
             >
               Checkout

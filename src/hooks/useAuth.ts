@@ -53,7 +53,28 @@ export function useAuth() {
       setUser({ ...authUser, profile: profile || undefined })
     } catch (error) {
       console.error('Error fetching user profile:', error)
-      setUser(authUser)
+      // If no profile exists, create one
+      if (error.code === 'PGRST116') {
+        try {
+          const { data: newProfile } = await supabase
+            .from('user_profiles')
+            .insert({
+              id: authUser.id,
+              name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'User',
+              email: authUser.email || '',
+              role: 'customer'
+            })
+            .select()
+            .single()
+          
+          setUser({ ...authUser, profile: newProfile })
+        } catch (insertError) {
+          console.error('Error creating user profile:', insertError)
+          setUser(authUser)
+        }
+      } else {
+        setUser(authUser)
+      }
     } finally {
       setLoading(false)
     }
